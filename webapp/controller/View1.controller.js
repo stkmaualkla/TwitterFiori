@@ -1,3 +1,4 @@
+/* eslint-disable */
 sap.ui.define([
 	"sap/ui/core/mvc/Controller"
 ], function (Controller) {
@@ -51,6 +52,47 @@ sap.ui.define([
 			
 			window.console.log(" parametersString ::: " + parametersString);
 			window.console.log(" SignatureString::::: " + signatureBaseString);
+			
+			jQuery.sap.require("FioriSTK.TwitterFiori.util.crypto-js-develop.src.hmac");
+			jQuery.sap.require("FioriSTK.TwitterFiori.util.crypto-js-develop.src.enc-base64");
+			
+			//jQuery.sap.includeScript("http://crypto-js.googlecode.com/svn/tags/3.1.2/build/components/enc-base64-min.js");
+			//jQuery.sap.includeScript("https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-base64.min.js");
+			//jQuery.sap.includeScript("http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha1.js");
+			//jQuery.sap.includeScript("https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/hmac-sha1.js");
+			
+			var hash = CryptoJS.HmacSHA1(signatureBaseString, signing_key);
+			var base64String = hash.toString(CryptoJS.enc.Base64);
+			var oauth_signature = encodeURIComponent(base64String);
+			
+			var URL = BaseURL + "?" + searchOption + "&" + oauth_parameters + "oauth_signature=" + oauth_signature + "&" + language + "&" + callback;	
+			
+			var socialGetter = (function() {
+			/* just a utility to do the script injection */
+			function addScript(url) {
+			var script = document.createElement('script');
+			script.async = true;
+			script.src = url;
+			document.body.appendChild(script);
+			}
+			return {
+			getTwitterTweets: function(url) {
+			addScript(url);
+			}
+			};
+			})();
+			
+			window.twitterCallback = function(data) {
+			    if (data) {
+	                var twitterResult = new sap.ui.model.json.JSONModel();
+	                twitterResult.setData(data);
+	                sap.ui.getCore().byId("__xmlview0").setModel(twitterResult, "twitterResult");
+			    }
+			};
+			
+			sap.ui.getCore().byId("__xmlview0").setModel(twitterResult, "twitterResult")
+			socialGetter.getTwitterTweets(URL);
+			
 			
 			/*
 			var event = {

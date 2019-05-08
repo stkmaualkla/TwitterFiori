@@ -1,9 +1,30 @@
-<mvc:View controllerName="FioriSTK.TwitterFiori.controller.View1" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="FioriSTK.TwitterFiori.controller.View1" displayBlock="true">
 	<Shell id="shell">
 		<App id="app">
 			<pages>
-				<Page id="page" title="{i18n>title}">
-					<content></content>
+				<Page id="page" title="{i18n>title}" backgroundDesign="List" titleLevel="H1">
+					<content>
+						<List busyIndicatorDelay="{masterView>/delay}" growing="true" growingScrollToLoad="true" id="list"
+							items="{ path: 'twitterResult>/statuses', sorter: { path: 'accountID', descending: false }, groupHeaderFactory: '.createGroupHeader' }"
+							mode="{= ${device>/system/phone} ? 'None' : 'SingleSelectMaster'}" noDataText="{masterView>/noDataText}" selectionChange="onSelectionChange"
+							updateFinished="onUpdateFinished">
+							<infoToolbar>
+								<Toolbar active="true" id="filterBar" press="onOpenViewSettings" visible="{masterView>/isFilterBarVisible}">
+									<Title id="filterBarLabel" text="{masterView>/filterBarLabel}"/>
+								</Toolbar>
+							</infoToolbar>
+							<items>
+								<ObjectListItem icon="{twitterResult>user/profile_image_url}"
+									intro="{twitterResult>user/name} - {twitterResult>created_at} - {twitterResult>user/location}" press="onSelectionChange"
+									title="{twitterResult>text}" type="{= ${device>/system/phone} ? 'Active' : 'Inactive'}"></ObjectListItem>
+							</items>
+						</List>
+						<Image src="https://ikaltours.com/wp-content/uploads/2018/10/twitter-round-logo-png-transparent-background-7.png" width="140px"
+							height="140px" id="image0"/>
+						<Image src="http://itpsap.com/wp-content/uploads/2019/01/SAP-UI5.png" width="140px" height="140px" id="image1"/>
+						<Image src="https://images.g2crowd.com/uploads/product/image/large_detail/large_detail_1538089732/sap-fiori.jpg" width="140px"
+							height="140px" id="image2"/>
+					</content>
 				</Page>
 			</pages>
 		</App>
